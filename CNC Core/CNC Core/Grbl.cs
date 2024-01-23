@@ -2275,7 +2275,7 @@ namespace CNC.Core
                         }
                     }
 
-                    file.Close();
+                    file?.Close();
                 }
                 catch
                 {
