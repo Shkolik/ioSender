@@ -84,9 +84,20 @@
                 <StackPanel VerticalAlignment="Center">
                     <Button Content="X+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                 </StackPanel>
-                <StackPanel Style="{StaticResource ZAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0">
+                <StackPanel Style="{StaticResource ZAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsNotVisibleConverter}}">
                     <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                     <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" VerticalAlignment="Top" Click="Button_Click"/>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                    <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center" Margin="5,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                    <Button Content="A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+
+                    <Button Content="A-" Style="{StaticResource JogButtonStyle}"  Margin="0,70,0,0" Click="Button_Click"/>
+                </StackPanel>
+                <StackPanel VerticalAlignment="Center" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                    <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Width="Auto" Height="Auto" Visibility="{Binding Path=LatheModeEnabled, Converter={StaticResource IsVisibleConverter}}">
@@ -110,7 +121,7 @@
                     <Button Content="Y-" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" Click="Button_Click"/>
                 </StackPanel>
             </StackPanel>
-            <StackPanel Style="{StaticResource AAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0">
+            <StackPanel Style="{StaticResource AAxisVisibleStyleEx}" VerticalAlignment="Center" Margin="5,0,0,0">
                 <Button Content="{Binding Path=AxisLetter.A, Converter={StaticResource JogPlusConverter}, Mode=OneWay}" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                 <Button Content="{Binding Path=AxisLetter.A, Converter={StaticResource JogMinusConverter}, Mode=OneWay}" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" Click="Button_Click"/>
             </StackPanel>

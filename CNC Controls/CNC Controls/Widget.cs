@@ -245,7 +245,8 @@ namespace CNC.Controls
                     wNumericTextBox = new NumericTextBox
                     {
                         Format = widget.Format,
-                        Height = 22
+                        Height = 22,
+                        Width = 50
                     };
                     labelWidth = 210;
                     grid = labelGrid = AddGrid(wNumericTextBox.Width + 4);

@@ -473,6 +473,7 @@ namespace CNC.Core
             }
         }
         public bool LatheModeEnabled { get { return GrblInfo.LatheModeEnabled; } set { OnPropertyChanged(); } }
+        public bool FoamCutModeEnabled { get { return GrblInfo.FoamCutModeEnabled; } set { OnPropertyChanged(); } }
         public int NumAxes { get { return GrblInfo.NumAxes; } set { OnPropertyChanged(); } }
         public AxisFlags AxisEnabledFlags {
             get { return GrblInfo.AxisFlags; }

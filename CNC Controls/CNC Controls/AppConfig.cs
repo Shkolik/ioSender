@@ -95,6 +95,15 @@ namespace CNC.Controls
     }
 
     [Serializable]
+    public class FoamCutConfig : ViewModelBase
+    {
+        private bool _isEnabled = false;
+                
+        public bool IsEnabled { get { return _isEnabled; } set { _isEnabled = value; OnPropertyChanged(); } }
+
+    }
+
+    [Serializable]
     public class ProbeConfig : ViewModelBase
     {
         private bool _CheckProbeStatus = true;
@@ -282,6 +291,9 @@ namespace CNC.Controls
         public JogUIConfig JogUiImperial { get; set; } = new JogUIConfig(new int[4] { 5, 10, 50, 100 }, new double[4] { .001d, .01d, .1d, 1d });
 
         public LatheConfig Lathe { get; set; } = new LatheConfig();
+
+        public FoamCutConfig FoamCut { get; set; } = new FoamCutConfig();
+
         public CameraConfig Camera { get; set; } = new CameraConfig();
         public GCodeViewerConfig GCodeViewer { get; set; } = new GCodeViewerConfig();
         public ProbeConfig Probing { get; set; } = new ProbeConfig();
@@ -327,6 +339,9 @@ namespace CNC.Controls
 
         public CameraConfig Camera { get { return Base == null ? null : Base.Camera; } }
         public LatheConfig Lathe { get { return Base == null ? null : Base.Lathe; } }
+
+        public FoamCutConfig FoamCut { get { return Base == null ? null : Base.FoamCut; } }
+
         public GCodeViewerConfig GCodeViewer { get { return Base == null ? null : Base.GCodeViewer; } }
         public ProbeConfig Probing { get { return Base == null ? null : Base.Probing; } }
 

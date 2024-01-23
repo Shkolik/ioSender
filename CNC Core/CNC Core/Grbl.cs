@@ -980,6 +980,11 @@ namespace CNC.Core
                 }
             }
         }
+
+        public static bool FoamCutModeEnabled
+        {
+            get;set;
+        }
         public static bool LatheUVWModeEnabled
         {
             get { return _latheUVWMode && GrblParserState.LatheMode != LatheMode.Disabled; }
@@ -1058,6 +1063,7 @@ namespace CNC.Core
             model.NumAxes = NumAxes;
             model.AxisEnabledFlags = AxisFlags;
             model.LatheModeEnabled = LatheModeEnabled;
+            model.FoamCutModeEnabled = FoamCutModeEnabled;
             model.OptionalSignals.Value = OptionalSignals;
             IsLoaded = res == true;
 
@@ -1193,6 +1199,7 @@ namespace CNC.Core
                         Grbl.GrblViewModel.AxisEnabledFlags = AxisFlags;
                         Grbl.GrblViewModel.ClearPosition();
                         Grbl.GrblViewModel.LatheModeEnabled = LatheModeEnabled;
+                        Grbl.GrblViewModel.FoamCutModeEnabled = FoamCutModeEnabled;
                         Grbl.GrblViewModel.ParseStatus(rt_report);
                     }
                 }
@@ -1241,7 +1248,16 @@ namespace CNC.Core
                             PlanBufferSize = int.Parse(s[1], CultureInfo.InvariantCulture);
                         if (s.Length > 2)
                             SerialBufferSize = int.Parse(s[2], CultureInfo.InvariantCulture);
-                        if (s.Length > 3 && NumAxes != int.Parse(s[3], CultureInfo.InvariantCulture))
+                        // do not get it. Looks like something not closelly related to grbl
+                        // here should be settings flags, but code assyme there are axes number. 
+                        // leave it for now for compatibility
+                        //if (s.Length > 3 && int.TryParse(s[3], out int flags) && NumAxes != flags && flags < 10 && flags > 0)
+                        //{
+                        //    NumAxes = flags;
+                        //    if (Grbl.GrblViewModel != null)
+                        //        Grbl.GrblViewModel.ClearPosition();
+                        //}
+                        if (s.Length > 3 && IsGrblHAL && NumAxes != int.Parse(s[3], CultureInfo.InvariantCulture))
                         {
                             NumAxes = int.Parse(s[3], CultureInfo.InvariantCulture);
                             if (Grbl.GrblViewModel != null)
@@ -2013,7 +2029,7 @@ namespace CNC.Core
                         }
                     }
 
-                    file.Close();
+                    file?.Close();
                 }
                 catch
                 {
@@ -2133,7 +2149,7 @@ namespace CNC.Core
                         }
                     }
 
-                    file.Close();
+                    file?.Close();
                 }
                 catch
                 {

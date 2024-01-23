@@ -531,6 +531,27 @@ namespace CNC.Controls
         }
     }
 
+    public class IsAxisVisibleExConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            bool enabled = false;
+
+            if (values.Length == 3 && values[0] is int && values[1] is int && values[2] is bool && (int)values[0] >= (int)values[1])
+                enabled = ((int)values[0] & (int)values[1]) != 0 && !(bool)values[2];
+
+            if (values.Length == 3 && values[0] is AxisFlags && values[1] is AxisFlags && values[2] is bool)
+                enabled = ((AxisFlags)values[0]).HasFlag((AxisFlags)values[1]) && !(bool)values[2];
+
+            return enabled ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class IsSignalVisibleConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)

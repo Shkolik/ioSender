@@ -3,6 +3,7 @@
                     xmlns:gcode="clr-namespace:CNC.GCode;assembly=CNC.Core"
                     xmlns:local="clr-namespace:CNC.Controls">
     <local:IsAxisVisibleConverter x:Key="IsAxisVisibleConverter" />
+    <local:IsAxisVisibleExConverter x:Key="IsAxisVisibleExConverter" />
     <Style x:Key="SmallXButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="Transparent" />
         <Setter Property="Template">
@@ -53,6 +54,21 @@
                             <gcode:AxisFlags>A</gcode:AxisFlags>
                         </Binding.Source>
                     </Binding>
+                </MultiBinding>
+            </Setter.Value>
+        </Setter>
+    </Style>
+    <Style x:Key="AAxisVisibleStyleEx">
+        <Setter Property="Control.Visibility">
+            <Setter.Value>
+                <MultiBinding Converter="{StaticResource IsAxisVisibleExConverter}">
+                    <Binding Path="AxisEnabledFlags" />
+                    <Binding>
+                        <Binding.Source>
+                            <gcode:AxisFlags>A</gcode:AxisFlags>
+                        </Binding.Source>
+                    </Binding>
+                    <Binding Path="FoamCutModeEnabled" />
                 </MultiBinding>
             </Setter.Value>
         </Setter>
