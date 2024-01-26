@@ -142,6 +142,36 @@ namespace CNC.Controls
         }
     }
 
+    public class JogAxisTogetherToTagConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value is bool together && parameter is string stringParam)
+            {
+                var tags = stringParam.Split('|');
+
+                if(together)
+                {
+                    var str = new StringBuilder();
+                    foreach(var tag in tags)
+                    {
+                        str.Append($"{tag},");
+                    }
+
+                    return str.ToString().TrimEnd(',');
+                }
+                return tags[0]; 
+                // Now do something with the parameters
+            }
+            return parameter;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class AxisLetterToJogPlusConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)

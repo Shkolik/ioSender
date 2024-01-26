@@ -44,6 +44,9 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using CNC.Core;
 using CNC.GCode;
+using System.Collections;
+using System.Collections.Generic;
+using System.Text;
 
 namespace CNC.Controls
 {
@@ -60,6 +63,8 @@ namespace CNC.Controls
         private static bool keyboardMappingsOk = false;
 
         private const Key xplus = Key.J, xminus = Key.H, yplus = Key.K, yminus = Key.L, zplus = Key.I, zminus = Key.M, aplus = Key.U, aminus = Key.N;
+
+        private Dictionary<int, double> axisPosition = new Dictionary<int, double>();
 
         public JogBaseControl()
         {
@@ -89,7 +94,10 @@ namespace CNC.Controls
             if (e.PropertyName == nameof(GrblViewModel.MachinePosition) || e.PropertyName == nameof(GrblViewModel.GrblState))
             {
                 if ((sender as GrblViewModel).GrblState.State != GrblStates.Jog)
+                {
                     jogAxis = -1;
+                    axisPosition.Clear();
+                }
             }
         }
 
@@ -430,10 +438,114 @@ namespace CNC.Controls
             model.ExecuteCommand(cmd);
         }
 
+        private void JogMove(IList<JogAxisMove> commands)
+        {
+            GrblViewModel model = DataContext as GrblViewModel;
+            var cmdFormat = "$J={0}{1}{2}F{3}";
+            var feed = Math.Ceiling(JogData.FeedRate).ToInvariantString();
+            var axis = new StringBuilder();
+
+            foreach (var cmd in commands)
+            {
+                var dist = cmd.Direction ? JogData.Distance : -JogData.Distance;
+
+                if (softLimits)
+                {
+                    int axIdx = GrblInfo.AxisLetterToIndex(cmd.Axis);
+
+                    if (!axisPosition.TryGetValue(axIdx, out position))
+                        position = dist + model.MachinePosition.Values[axIdx];
+                    else
+                        position += dist;
+
+                    if (GrblInfo.ForceSetOrigin)
+                    {
+                        if (!GrblInfo.HomingDirection.HasFlag(GrblInfo.AxisIndexToFlag(axIdx)))
+                        {
+                            if (position > 0d)
+                                position = 0d;
+                            else if (position < (-GrblInfo.MaxTravel.Values[axIdx] + limitSwitchesClearance))
+                                position = (-GrblInfo.MaxTravel.Values[axIdx] + limitSwitchesClearance);
+                        }
+                        else
+                        {
+                            if (position < 0d)
+                                position = 0d;
+                            else if (position > (GrblInfo.MaxTravel.Values[axIdx] - limitSwitchesClearance))
+                                position = GrblInfo.MaxTravel.Values[axIdx] - limitSwitchesClearance;
+                        }
+                    }
+                    else
+                    {
+                        if (position > -limitSwitchesClearance)
+                            position = -limitSwitchesClearance;
+                        else if (position < -(GrblInfo.MaxTravel.Values[axIdx] - limitSwitchesClearance))
+                            position = -(GrblInfo.MaxTravel.Values[axIdx] - limitSwitchesClearance);
+                    }
+
+                    if (position == 0d)
+                        return;
+
+                    axisPosition[axIdx] = position;
+
+                    axis.Append($"{cmd.Axis}{position.ToInvariantString()}");
+                }
+                else
+                {
+                    axis.Append($"{cmd.Axis}{dist.ToInvariantString()}");
+                }
+            }
+
+            model.ExecuteCommand(string.Format(cmdFormat, softLimits ? "G53" : "G91", mode, axis.ToString(), feed));
+        }
+
+        private void JogStop()
+        {
+            GrblViewModel model = DataContext as GrblViewModel;
+
+            model.ExecuteCommand(((char)GrblConstants.CMD_JOG_CANCEL).ToString());
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            JogCommand((string)(sender as Button).Tag == "stop" ? "stop" : (string)(sender as Button).Content);
+            if(sender is Button button)
+            {
+                if(button.Tag != null)
+                {
+                    var cmd = button.Tag.ToString();
+                    if(cmd.Equals("stop", StringComparison.OrdinalIgnoreCase) == true)
+                    {
+                        JogStop();
+                    }
+                    else
+                    {
+                        var commands = new List<JogAxisMove>();
+                        var listCmd = cmd.Split(',');
+                        foreach(var item in listCmd)
+                        {
+                            commands.Add(new JogAxisMove
+                            {
+                                Direction = item[1] == '+',
+                                Axis = item.Substring(0, 1)
+                            });
+                        }
+
+                        JogMove(commands);
+                    }
+                } 
+                else if(button.Content?.ToString().Length == 2) // simple jog command
+                {
+                    JogCommand(button.Content.ToString());
+                }
+            }            
         }
+    }
+
+    internal class JogAxisMove
+    {
+        public string Axis { get; set; }
+        public bool Direction { get;set; }
+
     }
 
     internal class ArrayValues<T> : ViewModelBase
@@ -487,6 +599,18 @@ namespace CNC.Controls
                 OnPropertyChanged("Feedrate" + i.ToString());
                 OnPropertyChanged("Distance" + i.ToString());
             }
+        }
+
+        private bool _jogTogether = false;
+        public bool JogTogether 
+        {
+            get { return _jogTogether; } 
+            set 
+            {
+                _jogTogether = value;
+                OnPropertyChanged();
+                OnPropertyChanged(nameof(JogTogether)); 
+            } 
         }
 
         public JogStep StepSize { get { return _jogStep; } set { _jogStep = value; OnPropertyChanged(); OnPropertyChanged(nameof(Distance)); } }

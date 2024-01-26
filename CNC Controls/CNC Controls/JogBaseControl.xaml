@@ -36,6 +36,7 @@
                     <local:GrblStateToIsJoggingConverter x:Key ="IsJoggingConverter"/>
                     <local:AxisLetterToJogPlusConverter x:Key="JogPlusConverter"/>
                     <local:AxisLetterToJogMinusConverter x:Key="JogMinusConverter"/>
+                    <local:JogAxisTogetherToTagConverter x:Key="JogAxisTogetherToTagConverter"/>
                 </ResourceDictionary>
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
@@ -70,34 +71,63 @@
         <StackPanel Orientation="Horizontal" Margin="90,10,5,0" Width="Auto" Height="Auto">
             <StackPanel Orientation="Horizontal" Width="Auto" Height="Auto" Visibility="{Binding Path=LatheModeEnabled, Converter={StaticResource IsNotVisibleConverter}}">
                 <StackPanel VerticalAlignment="Center">
-                    <Button Content="X-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="X-Y+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X-,Y+|Z-,A+'}"/>
+                    <Button Content="X-" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X-|Z-'}"/>
+                    <Button Content="X-Y-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X-,Y-|Z-,A-'}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Margin="5,0">
-                    <Button Content="Y+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="Y+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='Y+|A+'}"/>
                     <Button Tag="stop" Style="{StaticResource JogButtonStyle}" Margin="0,5" Click="Button_Click">
                         <Button.Content>
                             <Image Source="Resources/Symbols_Stop_32xLG.png"/>
                         </Button.Content>
                     </Button>
-                    <Button Content="Y-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="Y-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='Y-|A-'}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center">
-                    <Button Content="X+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="X+Y+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+,Y+|Z+,A+'}"/>
+                    <Button Content="X+" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+|Z+'}"/>
+                    <Button Content="X+Y-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+,Y-|Z+,A-'}"/>
                 </StackPanel>
+
+                <StackPanel Margin="5,0,0,0" VerticalAlignment="Center"  Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                    <CheckBox IsChecked="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+                </StackPanel>
+
                 <StackPanel Style="{StaticResource ZAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsNotVisibleConverter}}">
                     <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                     <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" VerticalAlignment="Top" Click="Button_Click"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
-                    <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="Z-A+" Tag="Z-,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
+                    <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
+                    <Button Content="Z-A-" Tag="Z-,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Margin="5,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
-                    <Button Content="A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
 
-                    <Button Content="A-" Style="{StaticResource JogButtonStyle}"  Margin="0,70,0,0" Click="Button_Click"/>
+                    <Button Content="A-" Style="{StaticResource JogButtonStyle}"  Margin="0,70,0,0" Click="Button_Click"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
-                    <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
+                    <Button Content="Z+A+" Tag="Z+,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
+                    <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
+                    <Button Content="Z+A-" Tag="Z+,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                            IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
             </StackPanel>
             <StackPanel Orientation="Horizontal" Width="Auto" Height="Auto" Visibility="{Binding Path=LatheModeEnabled, Converter={StaticResource IsVisibleConverter}}">
@@ -121,6 +151,9 @@
                     <Button Content="Y-" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" Click="Button_Click"/>
                 </StackPanel>
             </StackPanel>
+            
+            <StackPanel Margin="5,0,0,0" VerticalAlignment="Center"/>
+            
             <StackPanel Style="{StaticResource AAxisVisibleStyleEx}" VerticalAlignment="Center" Margin="5,0,0,0">
                 <Button Content="{Binding Path=AxisLetter.A, Converter={StaticResource JogPlusConverter}, Mode=OneWay}" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                 <Button Content="{Binding Path=AxisLetter.A, Converter={StaticResource JogMinusConverter}, Mode=OneWay}" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" Click="Button_Click"/>
