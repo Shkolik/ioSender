@@ -599,6 +599,23 @@ namespace CNC.Controls
                 OnPropertyChanged("Feedrate" + i.ToString());
                 OnPropertyChanged("Distance" + i.ToString());
             }
+
+            FoamCutEnabled = AppConfig.Settings.FoamCut.IsEnabled;
+        }
+
+        private bool _foamCutEnabled = false;
+        public bool FoamCutEnabled
+        {
+            get { return _foamCutEnabled; }
+            set
+            {
+                _foamCutEnabled = value;
+                if(!_foamCutEnabled)
+                {
+                    JogTogether = false;
+                }
+                OnPropertyChanged(nameof(FoamCutEnabled));
+            }
         }
 
         private bool _jogTogether = false;
@@ -608,7 +625,6 @@ namespace CNC.Controls
             set 
             {
                 _jogTogether = value;
-                OnPropertyChanged();
                 OnPropertyChanged(nameof(JogTogether)); 
             } 
         }

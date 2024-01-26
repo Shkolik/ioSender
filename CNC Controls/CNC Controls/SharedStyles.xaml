@@ -68,7 +68,7 @@
                             <gcode:AxisFlags>A</gcode:AxisFlags>
                         </Binding.Source>
                     </Binding>
-                    <Binding Path="FoamCutModeEnabled" />
+                    <Binding Path="JogData.FoamCutEnabled" RelativeSource="{RelativeSource AncestorType=UserControl}"/>
                 </MultiBinding>
             </Setter.Value>
         </Setter>

@@ -93,6 +93,7 @@ namespace CNC.Controls
                 if (AppConfig.Settings.Jog.Mode != JogConfig.JogMode.UI)
                     model.ConfigControls.Add(new JogConfigControl());
                 model.ConfigControls.Add(new StripGCodeConfigControl());
+                model.ConfigControls.Add(new FoamCutConfigControl());
             }
         }
 

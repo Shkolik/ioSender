@@ -981,10 +981,6 @@ namespace CNC.Core
             }
         }
 
-        public static bool FoamCutModeEnabled
-        {
-            get;set;
-        }
         public static bool LatheUVWModeEnabled
         {
             get { return _latheUVWMode && GrblParserState.LatheMode != LatheMode.Disabled; }
@@ -1063,7 +1059,6 @@ namespace CNC.Core
             model.NumAxes = NumAxes;
             model.AxisEnabledFlags = AxisFlags;
             model.LatheModeEnabled = LatheModeEnabled;
-            model.FoamCutModeEnabled = FoamCutModeEnabled;
             model.OptionalSignals.Value = OptionalSignals;
             IsLoaded = res == true;
 
@@ -1199,7 +1194,6 @@ namespace CNC.Core
                         Grbl.GrblViewModel.AxisEnabledFlags = AxisFlags;
                         Grbl.GrblViewModel.ClearPosition();
                         Grbl.GrblViewModel.LatheModeEnabled = LatheModeEnabled;
-                        Grbl.GrblViewModel.FoamCutModeEnabled = FoamCutModeEnabled;
                         Grbl.GrblViewModel.ParseStatus(rt_report);
                     }
                 }

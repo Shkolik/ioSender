@@ -81,8 +81,7 @@ namespace GCode_Sender
 
             CNC.Core.Grbl.GrblViewModel = (GrblViewModel)DataContext;
             GrblInfo.LatheModeEnabled = AppConfig.Settings.Lathe.IsEnabled;
-            GrblInfo.FoamCutModeEnabled = AppConfig.Settings.FoamCut.IsEnabled;
-
+            
             //       SDCardControl.FileSelected += new CNC_Controls.SDCardControl.FileSelectedHandler(SDCardControl_FileSelected);
 
             new PipeServer(App.Current.Dispatcher);

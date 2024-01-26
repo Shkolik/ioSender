@@ -75,6 +75,9 @@
     <Compile Include="FileActionControl.xaml.cs">
       <DependentUpon>FileActionControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="FoamCutConfigControl.xaml.cs">
+      <DependentUpon>FoamCutConfigControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="GCodeWrapDialog.xaml.cs">
       <DependentUpon>GCodeWrapDialog.xaml</DependentUpon>
     </Compile>
@@ -242,6 +245,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ErrorsAndAlarms.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FoamCutConfigControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

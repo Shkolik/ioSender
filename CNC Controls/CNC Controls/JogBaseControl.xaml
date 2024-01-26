@@ -138,7 +138,8 @@
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+,Y-|Z+,A-'}"/>
                 </StackPanel>
 
-                <StackPanel Margin="5,0,0,0" VerticalAlignment="Center"  Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                <StackPanel Margin="5,0,0,0" VerticalAlignment="Center" 
+                            Visibility="{Binding Path=JogData.FoamCutEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource IsVisibleConverter}}">
                     <CheckBox IsChecked="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}" Template="{StaticResource LockCheckBoxTemplate}">
                         <CheckBox.ToolTip>
                             <ToolTip>
@@ -148,11 +149,13 @@
                     </CheckBox>
                 </StackPanel>
 
-                <StackPanel Style="{StaticResource ZAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsNotVisibleConverter}}">
+                <StackPanel Style="{StaticResource ZAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0" 
+                            Visibility="{Binding Path=JogData.FoamCutEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource IsNotVisibleConverter}}">
                     <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"/>
                     <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" VerticalAlignment="Top" Click="Button_Click"/>
                 </StackPanel>
-                <StackPanel VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                <StackPanel VerticalAlignment="Center" Margin="5,0,0,0" 
+                            Visibility="{Binding Path=JogData.FoamCutEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource IsVisibleConverter}}">
                     <Button Content="&#x025E4;" FontSize="25" Tag="Z-,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                     <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
@@ -160,14 +163,16 @@
                     <Button Content="&#x025E3;" FontSize="25" Tag="Z-,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
-                <StackPanel VerticalAlignment="Center" Margin="5,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                <StackPanel VerticalAlignment="Center" Margin="5,0" 
+                            Visibility="{Binding Path=JogData.FoamCutEnabled, RelativeSource={RelativeSource AncestorType=UserControl},  Converter={StaticResource IsVisibleConverter}}">
                     <Button Content="A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
 
                     <Button Content="A-" Style="{StaticResource JogButtonStyle}"  Margin="0,70,0,0" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
-                <StackPanel VerticalAlignment="Center" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
+                <StackPanel VerticalAlignment="Center" 
+                            Visibility="{Binding Path=JogData.FoamCutEnabled, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource IsVisibleConverter}}">
                     <Button Content="&#x025E5;" FontSize="25" Tag="Z+,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                     <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
