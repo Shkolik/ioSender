@@ -22,6 +22,46 @@
                         <Setter Property="Focusable" Value="False"/>
                         <Setter Property="Content" Value="xx"/>
                     </Style>
+                    <ControlTemplate x:Key="LockCheckBoxTemplate" TargetType="{x:Type CheckBox}">
+                        <Grid >
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="32" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition />
+                            </Grid.ColumnDefinitions>
+                            <Grid
+                                Grid.Column="0" Grid.Row="0"
+                                Width="32" Height="32"
+                                VerticalAlignment="Center">
+                                <TextBlock Text="&#x1f512;" FontSize="22"  Name="_lockedIcon" Visibility="Hidden" />
+                                <TextBlock Text="&#x1f513;" FontSize="22" Name="_unlockedIcon" Visibility="Hidden"/>
+                            </Grid>
+                            <Border 
+                                x:Name="_xborder"
+                                Grid.Column="1" Grid.Row="0" 
+                                Width="8" 
+                                Visibility="Visible"/>
+                            <ContentPresenter 
+                                    Grid.Column="2" Grid.Row="0"
+                                    VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                    Margin="{TemplateBinding Padding}"
+                                    RecognizesAccessKey="True" 
+                                    TextBlock.Foreground="{TemplateBinding Foreground}"/>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <!-- Locked -->
+                                <Setter Property="Visibility" TargetName="_lockedIcon" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <!-- Unlocked -->
+                                <Setter Property="Visibility" TargetName="_unlockedIcon" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="Content" Value="{x:Null}">
+                                <Setter Property="Visibility" TargetName="_xborder" Value="Collapsed"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
                 </ResourceDictionary>
                 <ResourceDictionary>
                     <local:EnumValueToBooleanConverter x:Key="EnumToCheckedConverter" />
@@ -71,11 +111,11 @@
         <StackPanel Orientation="Horizontal" Margin="90,10,5,0" Width="Auto" Height="Auto">
             <StackPanel Orientation="Horizontal" Width="Auto" Height="Auto" Visibility="{Binding Path=LatheModeEnabled, Converter={StaticResource IsNotVisibleConverter}}">
                 <StackPanel VerticalAlignment="Center">
-                    <Button Content="X-Y+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E4;" FontSize="25" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X-,Y+|Z-,A+'}"/>
                     <Button Content="X-" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X-|Z-'}"/>
-                    <Button Content="X-Y-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E3;" FontSize="25" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X-,Y-|Z-,A-'}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Margin="5,0">
@@ -90,16 +130,22 @@
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='Y-|A-'}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center">
-                    <Button Content="X+Y+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E5;" FontSize="25" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+,Y+|Z+,A+'}"/>
                     <Button Content="X+" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+|Z+'}"/>
-                    <Button Content="X+Y-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E2;" FontSize="25" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             Tag="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource JogAxisTogetherToTagConverter}, ConverterParameter='X+,Y-|Z+,A-'}"/>
                 </StackPanel>
 
                 <StackPanel Margin="5,0,0,0" VerticalAlignment="Center"  Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
-                    <CheckBox IsChecked="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"/>
+                    <CheckBox IsChecked="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}" Template="{StaticResource LockCheckBoxTemplate}">
+                        <CheckBox.ToolTip>
+                            <ToolTip>
+                                Check to synchronize jogging of two panes
+                            </ToolTip>
+                        </CheckBox.ToolTip>
+                    </CheckBox>
                 </StackPanel>
 
                 <StackPanel Style="{StaticResource ZAxisVisibleStyle}" VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsNotVisibleConverter}}">
@@ -107,11 +153,11 @@
                     <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Margin="0,70,0,0" VerticalAlignment="Top" Click="Button_Click"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Margin="5,0,0,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
-                    <Button Content="Z-A+" Tag="Z-,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E4;" FontSize="25" Tag="Z-,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                     <Button Content="Z-" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
-                    <Button Content="Z-A-" Tag="Z-,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E3;" FontSize="25" Tag="Z-,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Margin="5,0" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
@@ -122,11 +168,11 @@
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
                 <StackPanel VerticalAlignment="Center" Visibility="{Binding Path=FoamCutModeEnabled, Converter={StaticResource IsVisibleConverter}}">
-                    <Button Content="Z+A+" Tag="Z+,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E5;" FontSize="25" Tag="Z+,A+" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                     <Button Content="Z+" Style="{StaticResource JogButtonStyle}" Click="Button_Click" Margin="0,5"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
-                    <Button Content="Z+A-" Tag="Z+,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
+                    <Button Content="&#x025E2;" FontSize="25" Tag="Z+,A-" Style="{StaticResource JogButtonStyle}" Click="Button_Click"
                             IsEnabled="{Binding Path=JogData.JogTogether, RelativeSource={RelativeSource AncestorType=UserControl}, Converter={StaticResource LogicalNotConverter}}"/>
                 </StackPanel>
             </StackPanel>
